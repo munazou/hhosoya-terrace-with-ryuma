@@ -1,43 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Iris 細谷家テラス</title>
-    <link rel="stylesheet" href="ui/css/styles.min.css">
-    <style>
-  html, body { margin:0; height:100%; }
-  /* 3Dを表示する領域をフルスクリーンに */
-  #iris { width:100vw; height:100vh; display:block; }
-  /* ローダがかぶって見えない時のために位置調整（任意） */
-  #loaderGlyph { position:fixed; top:12px; left:12px; z-index:10; }
-        <script>
-  // 画面サイズ反映（0x0対策）
-  window.addEventListener('load', () => {
-    window.dispatchEvent(new Event('resize'));
-    // Irisに「全体表示」を要求（実装有無によりtryで包む）
-    try {
-      if (window.Iris && Iris.App && Iris.App.View && Iris.App.View.zoomExtents) {
-        Iris.App.View.zoomExtents();
-      }
-    } catch(e) {}
-  });
-</script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iris 細谷家テラス</title>
 
-</style>
+  <!-- 表示領域を確保（これがないと真っ白になりがち） -->
+  <style>
+    html, body { margin:0; height:100%; }
+    #iris { width:100vw; height:100vh; display:block; background:#f8f8f8; }
+    #loaderGlyph { position:fixed; top:12px; left:12px; z-index:10; }
+  </style>
+
+  <!-- CSS（Iris出力のまま） -->
+  <link rel="stylesheet" href="ui/css/styles.min.css" />
 </head>
-
 <body>
-    <div id="loaderGlyph"><span class="glyphicon glyphicon-refresh glyphicon-spin"></span></div>
-    <div id="iris"></div> <!-- ← 追加 -->
+  <noscript>JavaScript を有効にしてください</noscript>
 
-    <script id="data" src="data/data.js"></script>
-    <script src="app/iris.min.js"></script>
-    <script src="app/ui.min.js"></script>
+  <div id="loaderGlyph"><span class="glyphicon glyphicon-refresh glyphicon-spin"></span></div>
+  <div id="iris"></div>
+
+  <!-- 読み込み順：data → iris本体 → UI初期化 -->
+  <script id="data" src="data/data.js"></script>
+  <script src="app/iris.min.js"></script>
+  <script src="app/ui.min.js"></script>
+
+  <!-- 画面サイズを強制反映＆全体表示（保険） -->
+  <script>
+    window.addEventListener('load', () => {
+      // たまに0x0で初期化される対策
+      window.dispatchEvent(new Event('resize'));
+      // Irisにズーム合わせ（実装されていれば効く）
+      try {
+        if (window.Iris && Iris.App && Iris.App.View && Iris.App.View.zoomExtents) {
+          Iris.App.View.zoomExtents();
+        }
+      } catch (e) { console.warn(e); }
+      console.log('Iris init kick.');
+    });
+  </script>
 </body>
-
 </html>
-
-
-
